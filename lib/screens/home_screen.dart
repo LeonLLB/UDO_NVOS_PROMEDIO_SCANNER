@@ -11,40 +11,26 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   // Datos de prueba (dummy data) simulando lo que vendrá de SQLite
-  final List<AspirantePromedio> _aspirantes = [
-    AspirantePromedio(
+  final List<AspiranteRecord> _aspirantes = [
+    AspiranteRecord(
       id: 1,
       cedula: 30123456,
-      promedioGeneral: 18.2,
       notas: {
         1: [18, 19, 20, 17],
         2: [17, 18, 19, 18, 20],
         3: [19, 20, 18],
         4: [18, 17, 19, 20],
       },
-      promedios: {
-        1: 18.5,
-        2: 18.4,
-        3: 19.0,
-        4: 18.5,
-      },
       createdAt: DateTime.now(),
     ),
-    AspirantePromedio(
+    AspiranteRecord(
       id: 2,
       cedula: 29876543,
-      promedioGeneral: 15.5,
       notas: {
         1: [15, 14, 16],
         2: [16, 15, 15],
         3: [14, 16, 17],
         4: [16, 15, 14],
-      },
-      promedios: {
-        1: 15.0,
-        2: 15.33,
-        3: 15.66,
-        4: 15.0,
       },
       createdAt: DateTime.now().subtract(const Duration(days: 1)),
     ),
@@ -77,7 +63,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       'C.I: ${aspirante.cedula}', 
                       style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)
                     ),
-                    subtitle: Text('Promedio General: ${aspirante.promedioGeneral}'),
                     
                     // Aquí iteramos sobre los años para crear la lista interna
                     children: aspirante.notas.keys.map((anio) {
@@ -93,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               borderRadius: BorderRadius.circular(8)
                             ),
                             child: Text(
-                              'Prom: ${aspirante.promedios[anio]}',
+                              'Notas: ${aspirante.notas.length}',
                               style: const TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ),

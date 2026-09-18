@@ -43,6 +43,7 @@ dependencies:
   share_plus: ^13.3.0
   permission_handler: ^13.0.2
   flutter_speed_dial: ^7.0.0
+  image_picker: ^1.2.3
 
 dev_dependencies:
   flutter_test:

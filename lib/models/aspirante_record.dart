@@ -1,19 +1,15 @@
 import 'dart:convert';
 
-class AspirantePromedio {
+class AspiranteRecord {
   final int? id; 
   final int cedula;
-  final double promedioGeneral;
   final Map<int, List<int>> notas;
-  final Map<int, double> promedios;
   final DateTime createdAt;
 
-  AspirantePromedio({
+  AspiranteRecord({
     this.id,
     required this.cedula,
-    required this.promedios,
     required this.notas,
-    required this.promedioGeneral,
     required this.createdAt,
   });
 
@@ -21,14 +17,21 @@ class AspirantePromedio {
     return {
       'id': id,
       'cedula': cedula,
-      'promedios': jsonEncode(promedios), 
-      'notas': jsonEncode(notas),         
-      'promedio_general': promedioGeneral,
+      'notas': jsonEncode(notas),       
       'created_at': createdAt.toIso8601String(),
     };
   }
 
-  factory AspirantePromedio.fromMap(Map<String, dynamic> map) {
+  @override
+  String toString() {
+    final Map<String, dynamic> notasParaJson = notas.map(
+      (key, value) => MapEntry(key.toString(), value),
+    );
+    
+    return "CEDULA: $cedula - NOTAS ${jsonEncode(notasParaJson)}";
+  }
+
+  factory AspiranteRecord.fromMap(Map<String, dynamic> map) {
 
     final Map<String, dynamic> rawNotas = jsonDecode(map['notas'] as String);
     final Map<int, List<int>> parsedNotas = rawNotas.map(
@@ -38,20 +41,10 @@ class AspirantePromedio {
       ),
     );
 
-    final Map<String, dynamic> rawPromedios = jsonDecode(map['promedios'] as String);
-    final Map<int, double> parsedPromedios = rawPromedios.map(
-      (key, value) => MapEntry(
-        int.parse(key), 
-        (value as num).toDouble(),
-      ),
-    );
-
-    return AspirantePromedio(
+    return AspiranteRecord(
       id: map['id'] as int?,
       cedula: map['cedula'] as int,
-      promedioGeneral: (map['promedio_general'] as num).toDouble(),
       notas: parsedNotas,
-      promedios: parsedPromedios,
       createdAt: DateTime.parse(map['created_at'] as String),
     );
   }
