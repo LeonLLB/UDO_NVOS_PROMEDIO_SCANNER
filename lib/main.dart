@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:intl/intl.dart';
+import 'package:udo_nvos_promedio_scanner/helpers/exportar.dart';
+import 'package:udo_nvos_promedio_scanner/helpers/subir_datos.dart';
 import 'package:udo_nvos_promedio_scanner/models/aspirante_record.dart';
 import 'package:udo_nvos_promedio_scanner/providers/database.dart';
 
@@ -138,7 +140,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Registros Académicos'),
+        title: const Text('Registros Escaneados'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: Stack(
@@ -284,8 +286,18 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                   backgroundColor: Colors.purple,
                   label: 'Subir Registros',
                   labelStyle: const TextStyle(fontWeight: FontWeight.w500),
-                  onTap: () {
-                    // _subirData();
+                  onTap: () async {
+                    
+                    await subirData(context,registrosEscaneados,onStart: (){
+                      setState(() {
+                        _isScanning = true;
+                      });
+                    },onEnd: (){
+                      setState(() {
+                        _isScanning = false;
+                      });
+                    });
+                    
                   },
                 ),
                 SpeedDialChild(
@@ -294,7 +306,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                   label: 'Exportar CSV',
                   labelStyle: const TextStyle(fontWeight: FontWeight.w500),
                   onTap: () {
-                    // _exportarCSV();
+                    exportarCsv(context,registrosEscaneados);
                   },
                 ),
 

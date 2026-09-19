@@ -24,7 +24,11 @@ Future<void> exportarCsv(BuildContext context, List<AspiranteRecord> registrosEs
 
   // 2. Llenar los datos
   for (var registro in registrosEscaneados) {
-    String notasJson = jsonEncode(registro.notas); 
+    final notasConvertidas = registro.notas.map(
+      (key, value) => MapEntry(key.toString(), value)
+    );
+    
+    String notasJson = jsonEncode(notasConvertidas);
     
     filas.add([
       registro.cedula,
@@ -33,22 +37,18 @@ Future<void> exportarCsv(BuildContext context, List<AspiranteRecord> registrosEs
     ]);
   }
 
-  // 3. Convertir a String CSV
-  String csv = const ListToCsvConverter().convert(filas);
+  String csv = Csv.excel().encode(filas);
 
-  // 4. Guardar en un archivo temporal
   final directorio = await getTemporaryDirectory();
   final rutaArchivo = '${directorio.path}/aspirantes_escaneados.csv';
   final archivo = File(rutaArchivo);
   
   await archivo.writeAsString(csv);
 
-  // 5. Compartir el archivo
   if (context.mounted) {
-    await SharePlus.instance.share(
-      [XFile(rutaArchivo)], 
-      text: 'Aquí están los registros escaneados de los aspirantes.',
-    );
-  }
+  await SharePlus.instance.share(
+    ShareParams( files: [XFile(rutaArchivo)])
+  );
+}
 
 }
