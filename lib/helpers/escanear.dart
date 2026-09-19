@@ -44,26 +44,18 @@ Future<Map<String,dynamic>> irAEscanear() async {
     }
 
     if (coincidencias < 2) {
-        // No es una nota certificada válida
         return {'success': false,"msg":"No es una nota certificada válida"}; 
       }
 
-      // =================================================
-      // 2. EXTRACCIÓN DE CÉDULA
-      // =================================================
       RegExp regexCedula = RegExp(r'[vve]\s*[-_.:]?\s*([0-9]{6,8})', caseSensitive: false);
       Match? matchCedula = regexCedula.firstMatch(textoLimpio);
       
     if (matchCedula == null) {
-        // Es un documento válido, pero no se leyó la cédula
         return {'success': false,"msg":"No se ha detectado una cédula de identidad"}; 
     }
       
     int cedulaExtraida = int.parse(matchCedula.group(1)!);
 
-    // =================================================
-      // 3. EXTRACCIÓN DE NOTAS (MÉTODO ESPACIAL Y LITERAL)
-      // =================================================
       List<Map<String, dynamic>> coordenadasAnios = [];
       List<Map<String, dynamic>> notasEncontradas = [];
 
@@ -128,12 +120,8 @@ Future<Map<String,dynamic>> irAEscanear() async {
         }
       }
 
-      // Limpiamos los años que no tienen notas (por ejemplo, si el alumno solo cursó hasta 4to)
       notasPorAno.removeWhere((key, value) => value.isEmpty);
 
-      // =================================================
-      // 4. CREACIÓN DEL REGISTRO Y RETORNO
-      // =================================================
       final nuevoAspirante = AspiranteRecord(
         cedula: cedulaExtraida,
         notas: notasPorAno,

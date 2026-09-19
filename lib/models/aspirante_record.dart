@@ -18,7 +18,7 @@ class AspiranteRecord {
       'id': id,
       'cedula': cedula,
       'notas': jsonEncode(notas),       
-      'created_at': createdAt.toIso8601String(),
+      'createdAt': createdAt.toIso8601String(),
     };
   }
 
@@ -45,7 +45,9 @@ class AspiranteRecord {
       id: map['id'] as int?,
       cedula: map['cedula'] as int,
       notas: parsedNotas,
-      createdAt: DateTime.parse(map['created_at'] as String),
+      createdAt: map['createdAt'] != null 
+          ? DateTime.parse(map['createdAt'] as String) 
+          : DateTime.now(),
     );
   }
 }
